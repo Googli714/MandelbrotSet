@@ -24,6 +24,17 @@ namespace Utils {
 		std::uniform_int_distribution<T>    distr(range_from, range_to);
 		return distr(generator);
 	}
+
+	void GeneratePallete(uint32_t*& v, int numberOfColors)
+	{
+		v = new uint32_t[numberOfColors];
+		for (size_t i = 0; i < numberOfColors; i++)
+		{
+			v[i] = Utils::random<uint32_t>(0, UINT32_MAX) | 0xff000000;
+		}
+		std::sort(v, v+numberOfColors);
+		v[numberOfColors] = 0xff000000;
+	}
 }
 
 void Mandelbrot::OnResize(uint32_t width, uint32_t height)
@@ -48,13 +59,7 @@ void Mandelbrot::Render(int maxiteration, double zoom, float xoffset, float yoff
 {
 	if (maxiteration != m_PrevMaxIteration)
 	{
-		m_Pallete = std::vector<uint32_t>(maxiteration);
-		m_Pallete.resize(maxiteration);
-		for (size_t i = 0; i < maxiteration; i++)
-		{
-			m_Pallete[i] = Utils::random<uint32_t>(0, UINT32_MAX);
-			m_Pallete[i] |= 0xff000000;
-		}
+		Utils::GeneratePallete(m_Pallete, maxiteration);
 		m_PrevMaxIteration = maxiteration;
 	}
 
@@ -79,10 +84,11 @@ void Mandelbrot::Render(int maxiteration, double zoom, float xoffset, float yoff
 	m_ImageData = new uint32_t[width * height];
 	m_FinalImage->Resize(width, height);
 
-
 	double xslope = 1.0f * (xrange_end - xrange_start) / (width);
 	double yslope = 1.0f * (yrange_end - yrange_start) / (height);
 
+
+	//Main Calculation
 	for (uint32_t y = 0; y < height; y++)
 	{
 		for (uint32_t x = 0; x < width; x++)
@@ -101,23 +107,8 @@ void Mandelbrot::Render(int maxiteration, double zoom, float xoffset, float yoff
 				iteration++;
 			}
 
-			uint32_t color;
-			double iter = double(iteration) / maxiteration;
-
-			if (iteration == maxiteration)
-			{
-				color = 0xff000000;
-			}
-			else
-			{
-				//color = Utils::ConvertToRGBA(glm::vec4(iter, 0.0f, 0.0f, 1.0f));
-				//color = pallete[(int)floor(iteration / 100.0f)];
-				color = m_Pallete[iteration];
-			}
-
-			m_ImageData[x + y * width] = color;
+			m_ImageData[x + y * width] = m_Pallete[iteration];
 		}
 	}
-
 	m_FinalImage->SetData(m_ImageData);
 }

@@ -19,9 +19,9 @@ public:
 			Render();
 		}
 		ImGui::InputInt("Max Iterations", &m_MaxIteration);
-		ImGui::InputDouble("Zoom", &zoom);
-		ImGui::DragFloat("X offset", &xoffset, 1.0f, 0.0f, 0.0f, "%.6f");
-		ImGui::DragFloat("Y offset", &yoffset, 1.0f, 0.0f, 0.0f, "%.6f");
+		ImGui::InputDouble("Zoom", &zoom, 1.0);
+		ImGui::DragFloat("X offset", &xoffset, 0.001f, 0.0f, 0.0f, "%.6f");
+		ImGui::DragFloat("Y offset", &yoffset, 0.001f, 0.0f, 0.0f, "%.6f");
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));

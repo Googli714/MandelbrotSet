@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <time.h>   
 #include <vector>
+#include <algorithm>
 
 class Mandelbrot
 {
@@ -23,5 +24,5 @@ private:
 	std::shared_ptr<Walnut::Image> m_FinalImage;
 	uint32_t* m_ImageData = nullptr;
 	int m_PrevMaxIteration = 0;
-	std::vector<uint32_t> m_Pallete = std::vector<uint32_t>(m_PrevMaxIteration);
+	uint32_t *m_Pallete;
 };
